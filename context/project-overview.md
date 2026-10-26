@@ -3,12 +3,12 @@
 > **Store Smarter. Build Faster.**
 > A centralized, AI-enhanced knowledge hub for developers: code snippets, AI prompts, notes, commands, files, images and links in one searchable place.
 
-| | |
-|---|---|
-| **Status** | 📝 Planning → ready for environment setup & UI scaffolding |
-| **Type** | SaaS (freemium, Stripe subscriptions) |
-| **Stack** | Next.js · TypeScript · Neon Postgres · Prisma · Tailwind v4 · shadcn/ui · Auth.js · Cloudflare R2 · OpenAI |
-| **Last updated** | 26 Oct 2026 |
+|                  |                                                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Status**       | 📝 Planning → ready for environment setup & UI scaffolding                                                 |
+| **Type**         | SaaS (freemium, Stripe subscriptions)                                                                      |
+| **Stack**        | Next.js · TypeScript · Neon Postgres · Prisma · Tailwind v4 · shadcn/ui · Auth.js · Cloudflare R2 · OpenAI |
+| **Last updated** | 26 Oct 2026                                                                                                |
 
 ---
 
@@ -34,15 +34,15 @@
 
 Developers keep their essentials scattered across many tools:
 
-| What | Where it usually lives |
-|---|---|
-| Code snippets | VS Code, Notion |
-| AI prompts | Buried in chat histories |
-| Context files | Deep inside individual projects |
-| Useful links | Browser bookmarks |
-| Docs | Random folders |
-| Commands | `.txt` files, bash history |
-| Project templates | GitHub Gists |
+| What              | Where it usually lives          |
+| ----------------- | ------------------------------- |
+| Code snippets     | VS Code, Notion                 |
+| AI prompts        | Buried in chat histories        |
+| Context files     | Deep inside individual projects |
+| Useful links      | Browser bookmarks               |
+| Docs              | Random folders                  |
+| Commands          | `.txt` files, bash history      |
+| Project templates | GitHub Gists                    |
 
 **Result:** constant context switching, lost knowledge and inconsistent workflows.
 
@@ -52,33 +52,38 @@ Developers keep their essentials scattered across many tools:
 
 ## 🧑‍💻 Target Users
 
-| Persona | Primary needs |
-|---|---|
-| 👨‍💻 **Everyday Developer** | Fast access to snippets, commands and links |
-| 🤖 **AI-First Developer** | Store and refine prompts, workflows and context files |
-| 🎓 **Content Creator / Educator** | Save course notes and reusable code |
-| 🏗️ **Full-Stack Builder** | Patterns, boilerplates, API references |
+| Persona                           | Primary needs                                         |
+| --------------------------------- | ----------------------------------------------------- |
+| 👨‍💻 **Everyday Developer**         | Fast access to snippets, commands and links           |
+| 🤖 **AI-First Developer**         | Store and refine prompts, workflows and context files |
+| 🎓 **Content Creator / Educator** | Save course notes and reusable code                   |
+| 🏗️ **Full-Stack Builder**         | Patterns, boilerplates, API references                |
 
 ---
 
 ## ✨ Core Features
 
 ### A) Items
+
 The core unit of DevStash. Every item has a **type** (system or custom), optional tags, and can live in one or more collections.
 
 ### B) Collections
+
 Group related items — **mixed item types allowed**.
 
 > Examples: `React Patterns` · `Context Files` · `Python Snippets` · `Interview Prep`
 
 ### C) Search
+
 Full-text search across **title, content, description, tags and type**, with filters for type, collection, favourites and pinned.
 
 ### D) Authentication
+
 - 📧 Email + password (credentials)
 - 🐙 GitHub OAuth
 
 ### E) Productivity
+
 - ⭐ Favourites and 📌 pinned items/collections
 - 🕒 Recently used items
 - 📥 Import from files
@@ -89,11 +94,11 @@ Full-text search across **title, content, description, tags and type**, with fil
 
 ### F) 🧠 AI Superpowers (Pro)
 
-| Feature | What it does |
-|---|---|
-| 🏷️ Auto-tagging | Suggests tags from item content |
-| 📝 AI summaries | One-line / short summaries of long items |
-| 🔍 Explain Code | Plain-English walkthrough of a snippet |
+| Feature                | What it does                                   |
+| ---------------------- | ---------------------------------------------- |
+| 🏷️ Auto-tagging        | Suggests tags from item content                |
+| 📝 AI summaries        | One-line / short summaries of long items       |
+| 🔍 Explain Code        | Plain-English walkthrough of a snippet         |
 | ⚡ Prompt optimization | Rewrites prompts for clarity and effectiveness |
 
 > Powered by **OpenAI `gpt-5-nano`** (cheap, fast — suits short, high-volume tasks).
@@ -104,15 +109,15 @@ Full-text search across **title, content, description, tags and type**, with fil
 
 System types are seeded at install time (`isSystem = true`, `userId = null`). Pro users can create **custom types**.
 
-| Type | Icon ([Lucide](https://lucide.dev/icons)) | Color | Content kind | Notes |
-|---|---|---|---|---|
-| Snippet | `Code` | `#3b82f6` 🔵 | text | Syntax highlighting, `language` field |
-| Prompt | `Sparkles` | `#8b5cf6` 🟣 | text | Prompt optimization target |
-| Note | `StickyNote` | `#fde047` 🟡 | text | Markdown |
-| Command | `Terminal` | `#f97316` 🟠 | text | One-click copy |
-| File | `File` | `#6b7280` ⚪ | file | Stored in R2 — **Pro** |
-| Image | `Image` | `#ec4899` 🩷 | file | Stored in R2 — Free & Pro |
-| URL | `Link` | `#10b981` 🟢 | url | Optional metadata/preview |
+| Type    | Icon ([Lucide](https://lucide.dev/icons)) | Color        | Content kind | Notes                                 |
+| ------- | ----------------------------------------- | ------------ | ------------ | ------------------------------------- |
+| Snippet | `Code`                                    | `#3b82f6` 🔵 | text         | Syntax highlighting, `language` field |
+| Prompt  | `Sparkles`                                | `#8b5cf6` 🟣 | text         | Prompt optimization target            |
+| Note    | `StickyNote`                              | `#fde047` 🟡 | text         | Markdown                              |
+| Command | `Terminal`                                | `#f97316` 🟠 | text         | One-click copy                        |
+| File    | `File`                                    | `#6b7280` ⚪ | file         | Stored in R2 — **Pro**                |
+| Image   | `Image`                                   | `#ec4899` 🩷 | file         | Stored in R2 — Free & Pro             |
+| URL     | `Link`                                    | `#10b981` 🟢 | url          | Optional metadata/preview             |
 
 ---
 
@@ -121,10 +126,11 @@ System types are seeded at install time (`isSystem = true`, `userId = null`). Pr
 > ⚠️ Starting point — **this schema will evolve.**
 
 Changes from the original draft:
+
 - ✅ Added the **Auth.js** models (`Account`, `Session`, `VerificationToken`) required by the Prisma adapter.
 - ✅ `contentType` is now an **enum** (`TEXT | FILE | URL`) instead of a free string.
 - ✅ Items ↔ Collections is **many-to-many** (an item can live in several collections).
-- ✅ Added `isPinned` to collections and `lastUsedAt` to items (for *Recently used*).
+- ✅ Added `isPinned` to collections and `lastUsedAt` to items (for _Recently used_).
 - ✅ Added `onDelete: Cascade`, uniqueness constraints and indexes for common queries.
 
 ```prisma
@@ -346,21 +352,21 @@ erDiagram
 
 ## 🧱 Tech Stack
 
-| Category | Choice | Docs |
-|---|---|---|
-| ⚛️ Framework | Next.js (App Router, React 19) | [nextjs.org/docs](https://nextjs.org/docs) |
-| 🟦 Language | TypeScript | [typescriptlang.org](https://www.typescriptlang.org/docs/) |
-| 🐘 Database | Neon (serverless PostgreSQL) | [neon.tech/docs](https://neon.tech/docs) |
-| 🔺 ORM | Prisma | [prisma.io/docs](https://www.prisma.io/docs) |
-| ⚡ Caching | Redis — optional (e.g. Upstash) | [upstash.com/docs](https://upstash.com/docs/redis) |
-| 🪣 File storage | Cloudflare R2 (S3-compatible) | [developers.cloudflare.com/r2](https://developers.cloudflare.com/r2/) |
-| 🎨 Styling | Tailwind CSS v4 | [tailwindcss.com/docs](https://tailwindcss.com/docs) |
-| 🧱 UI components | shadcn/ui | [ui.shadcn.com](https://ui.shadcn.com) |
-| 🔐 Auth | Auth.js / NextAuth v5 (credentials + GitHub) | [authjs.dev](https://authjs.dev) |
-| 🧠 AI | OpenAI `gpt-5-nano` | [platform.openai.com/docs](https://platform.openai.com/docs) |
-| 💳 Payments | Stripe (Checkout, Billing Portal, Webhooks) | [docs.stripe.com](https://docs.stripe.com) |
-| 🚀 Deployment | Vercel | [vercel.com/docs](https://vercel.com/docs) |
-| 🚨 Monitoring | Sentry (later) | [docs.sentry.io](https://docs.sentry.io/platforms/javascript/guides/nextjs/) |
+| Category         | Choice                                       | Docs                                                                         |
+| ---------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
+| ⚛️ Framework     | Next.js (App Router, React 19)               | [nextjs.org/docs](https://nextjs.org/docs)                                   |
+| 🟦 Language      | TypeScript                                   | [typescriptlang.org](https://www.typescriptlang.org/docs/)                   |
+| 🐘 Database      | Neon (serverless PostgreSQL)                 | [neon.tech/docs](https://neon.tech/docs)                                     |
+| 🔺 ORM           | Prisma                                       | [prisma.io/docs](https://www.prisma.io/docs)                                 |
+| ⚡ Caching       | Redis — optional (e.g. Upstash)              | [upstash.com/docs](https://upstash.com/docs/redis)                           |
+| 🪣 File storage  | Cloudflare R2 (S3-compatible)                | [developers.cloudflare.com/r2](https://developers.cloudflare.com/r2/)        |
+| 🎨 Styling       | Tailwind CSS v4                              | [tailwindcss.com/docs](https://tailwindcss.com/docs)                         |
+| 🧱 UI components | shadcn/ui                                    | [ui.shadcn.com](https://ui.shadcn.com)                                       |
+| 🔐 Auth          | Auth.js / NextAuth v5 (credentials + GitHub) | [authjs.dev](https://authjs.dev)                                             |
+| 🧠 AI            | OpenAI `gpt-5-nano`                          | [platform.openai.com/docs](https://platform.openai.com/docs)                 |
+| 💳 Payments      | Stripe (Checkout, Billing Portal, Webhooks)  | [docs.stripe.com](https://docs.stripe.com)                                   |
+| 🚀 Deployment    | Vercel                                       | [vercel.com/docs](https://vercel.com/docs)                                   |
+| 🚨 Monitoring    | Sentry (later)                               | [docs.sentry.io](https://docs.sentry.io/platforms/javascript/guides/nextjs/) |
 
 **Supporting libraries (suggested):** `lucide-react` (icons), `zod` (validation), `react-hook-form`, a Markdown editor (e.g. `@uiw/react-md-editor`), `shiki` (syntax highlighting), `bcryptjs` (password hashing).
 
@@ -443,17 +449,17 @@ sequenceDiagram
 
 ## 💰 Monetization
 
-| | 🆓 Free | ⭐ Pro |
-|---|---|---|
-| **Price** | $0 | **$8/month** or **$72/year** (save 25%) |
-| Items | 50 | Unlimited |
-| Collections | 3 | Unlimited |
-| Search | Basic | Full |
-| Image uploads | ✅ | ✅ |
-| File uploads | ❌ | ✅ |
-| Custom item types | ❌ | ✅ |
-| AI features | ❌ | ✅ |
-| Export (JSON / ZIP) | ❌ | ✅ |
+|                     | 🆓 Free | ⭐ Pro                                  |
+| ------------------- | ------- | --------------------------------------- |
+| **Price**           | $0      | **$8/month** or **$72/year** (save 25%) |
+| Items               | 50      | Unlimited                               |
+| Collections         | 3       | Unlimited                               |
+| Search              | Basic   | Full                                    |
+| Image uploads       | ✅      | ✅                                      |
+| File uploads        | ❌      | ✅                                      |
+| Custom item types   | ❌      | ✅                                      |
+| AI features         | ❌      | ✅                                      |
+| Export (JSON / ZIP) | ❌      | ✅                                      |
 
 - Stripe handles subscriptions; webhooks keep `isPro` in sync.
 - Enforce limits **server-side** (never trust the client).
@@ -491,7 +497,14 @@ sequenceDiagram
 - **Collapsible sidebar** — filters, item types, collections.
 - **Main workspace** — grid or list view, toggleable.
 - **Item editor** — full-screen (or side drawer) with Markdown/code editing.
-- **Command palette** (`⌘K` / `Ctrl+K`) — quick search and actions *(suggested)*.
+- **Command palette** (`⌘K` / `Ctrl+K`) — quick search and actions _(suggested)_.
+
+### Screenshots
+
+Refer to the screenshots below as a base of the dashboard. It does not have to be exact. Use it as a reference.
+
+- @context\screenshots\dashboard-ui-drawer.png
+- @context\screenshots\dashboard-ui-main.png
 
 ### Responsive
 
@@ -549,6 +562,7 @@ SENTRY_DSN=
 ## 🧭 Roadmap
 
 ### 🟢 Phase 1 — MVP
+
 - [ ] Project setup (Next.js, Tailwind, shadcn/ui, Prisma, Neon)
 - [ ] Auth (email/password + GitHub)
 - [ ] Seed system item types
@@ -560,6 +574,7 @@ SENTRY_DSN=
 - [ ] Free-tier limits
 
 ### 🟣 Phase 2 — Pro
+
 - [ ] Stripe billing & upgrade flow
 - [ ] File uploads (R2)
 - [ ] Custom item types
@@ -568,6 +583,7 @@ SENTRY_DSN=
 - [ ] Import from files
 
 ### 🔵 Phase 3 — Future
+
 - [ ] Shared collections
 - [ ] Team / Org plans
 - [ ] VS Code extension
@@ -578,15 +594,15 @@ SENTRY_DSN=
 
 ## ❓ Open Questions & Decisions
 
-| # | Question | Notes |
-|---|---|---|
-| 1 | One collection per item, or many? | Schema now uses **many-to-many**; revert to a single `collectionId` if simpler is preferred. |
-| 2 | Search implementation | Start with Postgres `ILIKE`/full-text (`tsvector`); consider `pg_trgm` for fuzzy matching. |
-| 3 | What happens on downgrade? | e.g. user has 120 items → read-only above the limit, or block new items only? |
-| 4 | Storage limits | Per-file size cap and total storage quota for Pro? |
-| 5 | AI cost control | Per-user rate limiting / monthly quota for AI calls. |
-| 6 | Custom-type deletion | What happens to items when a user deletes a custom type? |
-| 7 | Free image uploads | Size/count limits for free-tier images? |
+| #   | Question                          | Notes                                                                                        |
+| --- | --------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1   | One collection per item, or many? | Schema now uses **many-to-many**; revert to a single `collectionId` if simpler is preferred. |
+| 2   | Search implementation             | Start with Postgres `ILIKE`/full-text (`tsvector`); consider `pg_trgm` for fuzzy matching.   |
+| 3   | What happens on downgrade?        | e.g. user has 120 items → read-only above the limit, or block new items only?                |
+| 4   | Storage limits                    | Per-file size cap and total storage quota for Pro?                                           |
+| 5   | AI cost control                   | Per-user rate limiting / monthly quota for AI calls.                                         |
+| 6   | Custom-type deletion              | What happens to items when a user deletes a custom type?                                     |
+| 7   | Free image uploads                | Size/count limits for free-tier images?                                                      |
 
 ---
 
