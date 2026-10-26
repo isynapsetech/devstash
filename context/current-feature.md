@@ -4,7 +4,7 @@ Dashboard UI Phase 3 — build the main dashboard area (stats cards, recent coll
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-In Progress
+Completed
 
 # Goals
 <!-- Goals and requirements -->
@@ -45,3 +45,10 @@ In Progress
 - Collapses to icons on desktop, always a drawer on mobile; toggle button in the top bar (also Ctrl/⌘+B)
 - Recent collections ordered by latest item `updatedAt` (mock collections have no timestamp)
 - Rewrote the generated `use-mobile` hook with `useSyncExternalStore` to fix a lint error
+
+## 2026-10-26 — Dashboard UI Phase 3
+- Added shadcn `card` and `badge` components
+- Main dashboard area: 4 stats cards, recent collections grid, pinned items and 10 recent items
+- Extracted shared mock-data queries into `src/lib/dashboard.ts` and a `TypeIcon` component, reused by the sidebar
+- Added two mock items so the recent items list has 10 entries
+- Total items stat sums per-type counts to match the sidebar; favorite counts come from the sample item list
