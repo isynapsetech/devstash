@@ -1,19 +1,5 @@
 import Link from "next/link";
-import {
-  ChevronDown,
-  Code,
-  File,
-  Folder,
-  Image,
-  Layers,
-  Link as LinkIcon,
-  Settings,
-  Sparkles,
-  Star,
-  StickyNote,
-  Terminal,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, Folder, Layers, Settings, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -30,35 +16,11 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { collections, currentUser, itemTypes, items, type MockCollection } from "@/lib/mock-data";
-
-const TYPE_ICONS: Record<string, LucideIcon> = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image,
-  Link: LinkIcon,
-};
+import TypeIcon from "@/components/dashboard/TypeIcon";
+import { getCollectionsByRecent } from "@/lib/dashboard";
+import { collections, currentUser, itemTypes, type MockCollection } from "@/lib/mock-data";
 
 const RECENT_COLLECTIONS_LIMIT = 5;
-
-// Collections have no activity timestamp yet, so recency is the latest update among their items.
-function getRecentCollections(): MockCollection[] {
-  const lastActivity = new Map<string, number>();
-  for (const item of items) {
-    const updatedAt = Date.parse(item.updatedAt);
-    for (const collectionId of item.collectionIds) {
-      lastActivity.set(collectionId, Math.max(lastActivity.get(collectionId) ?? 0, updatedAt));
-    }
-  }
-
-  return collections
-    .filter((collection) => !collection.isFavorite)
-    .sort((a, b) => (lastActivity.get(b.id) ?? 0) - (lastActivity.get(a.id) ?? 0))
-    .slice(0, RECENT_COLLECTIONS_LIMIT);
-}
 
 function getInitials(name: string): string {
   return name
@@ -76,7 +38,7 @@ function SectionLabel({ label }: { label: string }) {
       className="group/trigger w-fit gap-1 hover:text-sidebar-foreground"
     >
       {label}
-      <ChevronDown className="-rotate-90 transition-transform group-data-[panel-open]/trigger:rotate-0" />
+      <ChevronDown className="-rotate-90 transition-transform group-data-panel-open/trigger:rotate-0" />
     </SidebarGroupLabel>
   );
 }
@@ -112,7 +74,9 @@ function CollectionLink({ collection }: { collection: MockCollection }) {
 
 export default function AppSidebar() {
   const favoriteCollections = collections.filter((collection) => collection.isFavorite);
-  const recentCollections = getRecentCollections();
+  const recentCollections = getCollectionsByRecent()
+    .filter((collection) => !collection.isFavorite)
+    .slice(0, RECENT_COLLECTIONS_LIMIT);
 
   return (
     <Sidebar collapsible="icon">
@@ -134,22 +98,18 @@ export default function AppSidebar() {
           <SectionLabel label="Types" />
           <CollapsibleContent render={<SidebarGroupContent />}>
             <SidebarMenu>
-              {itemTypes.map((type) => {
-                const Icon = TYPE_ICONS[type.icon] ?? File;
-                return (
-                  <SidebarMenuItem key={type.id}>
-                    <SidebarMenuButton
-                      tooltip={type.name}
-                      render={<Link href={`/items/${type.slug}`} />}
-                    >
-                      {/* Type colors come from data (custom types later), so they can't be static classes */}
-                      <Icon style={{ color: type.color }} />
-                      <span>{type.name}</span>
-                    </SidebarMenuButton>
-                    <SidebarMenuBadge className="text-muted-foreground">{type.itemCount}</SidebarMenuBadge>
-                  </SidebarMenuItem>
-                );
-              })}
+              {itemTypes.map((type) => (
+                <SidebarMenuItem key={type.id}>
+                  <SidebarMenuButton
+                    tooltip={type.name}
+                    render={<Link href={`/items/${type.slug}`} />}
+                  >
+                    <TypeIcon icon={type.icon} color={type.color} />
+                    <span>{type.name}</span>
+                  </SidebarMenuButton>
+                  <SidebarMenuBadge className="text-muted-foreground">{type.itemCount}</SidebarMenuBadge>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </CollapsibleContent>
         </Collapsible>

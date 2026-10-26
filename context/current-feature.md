@@ -1,27 +1,25 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Dashboard UI Phase 2 — build the collapsible sidebar (item types, favorite and recent collections, user avatar area) using mock data. Phase 2 of 3.
+Dashboard UI Phase 3 — build the main dashboard area (stats cards, recent collections, pinned items, recent items) using mock data. Phase 3 of 3.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-Completed
+In Progress
 
 # Goals
 <!-- Goals and requirements -->
-- Collapsible sidebar
-- Items/types with links to `/items/TYPE` (e.g. `/items/snippets`)
-- Favorite collections
-- Most recent collections
-- User avatar area at the bottom
-- Drawer icon to open/close sidebar
-- Always a drawer on mobile view
+- The main area to the right of the sidebar
+- 4 stats cards at the top: number of items, collections, favorite items and favorite collections (not in screenshot)
+- Recent collections
+- Pinned items
+- 10 recent items
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/dashboard-phase-2-spec.md
+- Spec: @context/features/dashboard-phase-3-spec.md
 - Import data directly from @src/lib/mock-data.ts until the database is in place
 - References: @context/screenshots/dashboard-ui-main.png, @context/project-overview.md
-- Other phases: @context/features/dashboard-phase-1-spec.md, @context/features/dashboard-phase-3-spec.md
+- Other phases: @context/features/dashboard-phase-1-spec.md, @context/features/dashboard-phase-2-spec.md
 
 # History
 <!-- Keep this updated. Earliest to latest -->
