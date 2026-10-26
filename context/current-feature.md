@@ -1,25 +1,27 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Dashboard UI Phase 1 — set up shadcn/ui and the base `/dashboard` layout (top bar plus sidebar and main placeholders). Phase 1 of 3.
+Dashboard UI Phase 2 — build the collapsible sidebar (item types, favorite and recent collections, user avatar area) using mock data. Phase 2 of 3.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-Completed
+In Progress
 
 # Goals
 <!-- Goals and requirements -->
-- Initialize shadcn/ui and install the components needed
-- Dashboard route at `/dashboard`
-- Main dashboard layout and any global styles
-- Dark mode by default
-- Top bar with search and New Item button (display only)
-- Placeholders for sidebar and main area: an `h2` with "Sidebar" and one with "Main"
+- Collapsible sidebar
+- Items/types with links to `/items/TYPE` (e.g. `/items/snippets`)
+- Favorite collections
+- Most recent collections
+- User avatar area at the bottom
+- Drawer icon to open/close sidebar
+- Always a drawer on mobile view
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/dashboard-phase-1-spec.md
-- References: @context/screenshots/dashboard-ui-main.png, @context/project-overview.md, @src/lib/mock-data.ts
-- Later phases: @context/features/dashboard-phase-2-spec.md, @context/features/dashboard-phase-3-spec.md
+- Spec: @context/features/dashboard-phase-2-spec.md
+- Import data directly from @src/lib/mock-data.ts until the database is in place
+- References: @context/screenshots/dashboard-ui-main.png, @context/project-overview.md
+- Other phases: @context/features/dashboard-phase-1-spec.md, @context/features/dashboard-phase-3-spec.md
 
 # History
 <!-- Keep this updated. Earliest to latest -->
