@@ -4,7 +4,7 @@ Dashboard UI Phase 2 — build the collapsible sidebar (item types, favorite and
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-In Progress
+Completed
 
 # Goals
 <!-- Goals and requirements -->
@@ -40,3 +40,10 @@ In Progress
 - Added the `/dashboard` route with a layout: sidebar placeholder, top bar and main area
 - Dark mode by default (`dark` class on `<html>`), Geist fonts wired into the theme
 - Top bar with search input (⌘K hint) and New Item button (display only)
+
+## 2026-10-26 — Dashboard UI Phase 2
+- Added shadcn `sidebar`, `avatar` and `collapsible` components (plus sheet, tooltip, separator, skeleton)
+- Sidebar with item type links to `/items/[slug]`, favorite and recent collections, and user avatar area
+- Collapses to icons on desktop, always a drawer on mobile; toggle button in the top bar (also Ctrl/⌘+B)
+- Recent collections ordered by latest item `updatedAt` (mock collections have no timestamp)
+- Rewrote the generated `use-mobile` hook with `useSyncExternalStore` to fix a lint error
