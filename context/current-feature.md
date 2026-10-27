@@ -1,27 +1,40 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Prisma + Neon PostgreSQL setup — set up Prisma 7 ORM with a Neon serverless Postgres database and the initial schema.
+Seed data — populate the database (`prisma/seed.ts`) with a demo user, system item types, and sample collections and items for development and demos.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-Completed
+In Progress
 
 # Goals
 <!-- Goals and requirements -->
-- Use Neon PostgreSQL (serverless)
-- Create the initial schema from the data models in project-overview.md (this will evolve)
-- Include the NextAuth models (Account, Session, VerificationToken)
-- Add appropriate indexes and cascade deletes
+- **Demo user:** `demo@devstash.io`, name "Demo User", password `12345678` hashed with bcryptjs (12 rounds), `isPro: false`, `emailVerified` set to the current date
+- **System item types** (`isSystem: true`, icons are Lucide component names):
+
+  | Name    | Icon       | Color   |
+  | ------- | ---------- | ------- |
+  | snippet | Code       | #3b82f6 |
+  | prompt  | Sparkles   | #8b5cf6 |
+  | command | Terminal   | #f97316 |
+  | note    | StickyNote | #fde047 |
+  | file    | File       | #6b7280 |
+  | image   | Image      | #ec4899 |
+  | link    | Link       | #10b981 |
+
+- **Collections and items:**
+  - **React Patterns** — _Reusable React patterns and hooks_ — 3 TypeScript snippets: custom hooks (useDebounce, useLocalStorage, etc.), component patterns (context providers, compound components), utility functions
+  - **AI Workflows** — _AI prompts and workflow automations_ — 3 prompts: code review, documentation generation, refactoring assistance
+  - **DevOps** — _Infrastructure and deployment resources_ — 1 snippet (Docker, CI/CD config), 1 command (deployment scripts), 2 links (real documentation URLs)
+  - **Terminal Commands** — _Useful shell commands for everyday development_ — 4 commands: git operations, Docker commands, process management, package manager utilities
+  - **Design Resources** — _UI/UX resources and references_ — 4 links (real URLs): CSS/Tailwind references, component libraries, design systems, icon libraries
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/database-spec.md
-- Initial data models: @context/project-overview.md
-- **Use Prisma 7**, which has breaking changes. Read the full upgrade guide first: https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7
-- Setup guide: https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/prisma-postgres
-- Prisma docs: https://prisma.io/docs (fetch the latest, don't rely on older patterns)
-- `DATABASE_URL` points at the Neon **development** branch; production is a separate branch
-- **Always create migrations** (`prisma migrate dev`); never `db push` unless told to
+- Spec: @context/features/seed-spec.md
+- Replaces the current seed in `prisma/seed.ts` (John Doe + mock dashboard data, capitalized type names) — run with `npm run db:seed`
+- Prisma 7 doesn't seed automatically after migrations; seed command is configured in `prisma.config.ts`
+- Needs `bcryptjs` installed
+- Schema changes (if any) go through `prisma migrate dev`, never `db push`
 
 # History
 <!-- Keep this updated. Earliest to latest -->
