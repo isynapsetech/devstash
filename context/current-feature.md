@@ -4,7 +4,7 @@ Seed data — populate the database (`prisma/seed.ts`) with a demo user, system 
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-In Progress
+Completed
 
 # Goals
 <!-- Goals and requirements -->
@@ -75,3 +75,11 @@ In Progress
 - Initial migration `20261027084116_init` applied to the Neon development branch (migrations only, never `db push`)
 - Seed script `prisma/seed.ts` (`npm run db:seed`): 7 system item types and a demo user with the mock collections, items and tags
 - Database smoke test `scripts/test-db.ts` (`npm run db:test`): connection, tables, counts, write/read and cascade delete
+
+## 2026-10-27 — Seed data
+- Rewrote `prisma/seed.ts` per the seed spec: demo user `demo@devstash.io` (bcryptjs, 12 rounds, free plan, email verified)
+- 7 lowercase system item types; types from the previous seed are renamed in place (case-insensitive match), not duplicated
+- 5 collections with 18 items: React Patterns, AI Workflows, DevOps, Terminal Commands, Design Resources (real URLs for links)
+- Seed is re-runnable and removes the previous `john@example.com` seed user
+- `npm run db:test` now also verifies the seeded types, demo user (incl. password) and per-collection item types against the spec
+- Added `bcryptjs` dependency
