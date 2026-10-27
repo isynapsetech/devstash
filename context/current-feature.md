@@ -1,25 +1,27 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Dashboard UI Phase 3 — build the main dashboard area (stats cards, recent collections, pinned items, recent items) using mock data. Phase 3 of 3.
+Prisma + Neon PostgreSQL setup — set up Prisma 7 ORM with a Neon serverless Postgres database and the initial schema.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-Completed
+In Progress
 
 # Goals
 <!-- Goals and requirements -->
-- The main area to the right of the sidebar
-- 4 stats cards at the top: number of items, collections, favorite items and favorite collections (not in screenshot)
-- Recent collections
-- Pinned items
-- 10 recent items
+- Use Neon PostgreSQL (serverless)
+- Create the initial schema from the data models in project-overview.md (this will evolve)
+- Include the NextAuth models (Account, Session, VerificationToken)
+- Add appropriate indexes and cascade deletes
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/dashboard-phase-3-spec.md
-- Import data directly from @src/lib/mock-data.ts until the database is in place
-- References: @context/screenshots/dashboard-ui-main.png, @context/project-overview.md
-- Other phases: @context/features/dashboard-phase-1-spec.md, @context/features/dashboard-phase-2-spec.md
+- Spec: @context/features/database-spec.md
+- Initial data models: @context/project-overview.md
+- **Use Prisma 7**, which has breaking changes. Read the full upgrade guide first: https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7
+- Setup guide: https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/prisma-postgres
+- Prisma docs: https://prisma.io/docs (fetch the latest, don't rely on older patterns)
+- `DATABASE_URL` points at the Neon **development** branch; production is a separate branch
+- **Always create migrations** (`prisma migrate dev`); never `db push` unless told to
 
 # History
 <!-- Keep this updated. Earliest to latest -->
