@@ -1,6 +1,14 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { DashboardItem, ItemStats } from "@/types/items";
+import type { DashboardItem, ItemStats, SidebarItemType } from "@/types/items";
+
+// The schema has no ordering column, so system types follow this display order; custom types go after.
+const SYSTEM_TYPE_ORDER = ["snippet", "prompt", "command", "note", "file", "image", "link"];
+
+function typeRank(type: SidebarItemType): number {
+  const index = SYSTEM_TYPE_ORDER.indexOf(type.name);
+  return type.isSystem && index !== -1 ? index : SYSTEM_TYPE_ORDER.length;
+}
 
 const DASHBOARD_ITEM_SELECT = {
   id: true,
@@ -36,6 +44,25 @@ export async function getRecentItems(userId: string, limit: number): Promise<Das
     select: DASHBOARD_ITEM_SELECT,
   });
   return items.map(toDashboardItem);
+}
+
+// System types plus the user's custom types, each with the user's item count.
+export async function getSidebarItemTypes(userId: string): Promise<SidebarItemType[]> {
+  const types = await prisma.itemType.findMany({
+    where: { OR: [{ isSystem: true }, { userId }] },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+      color: true,
+      isSystem: true,
+      _count: { select: { items: { where: { userId } } } },
+    },
+  });
+
+  return types
+    .map(({ _count, ...type }) => ({ ...type, itemCount: _count.items }))
+    .sort((a, b) => typeRank(a) - typeRank(b) || a.name.localeCompare(b.name));
 }
 
 export async function getItemStats(userId: string): Promise<ItemStats> {

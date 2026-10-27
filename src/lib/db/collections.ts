@@ -1,16 +1,26 @@
+import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import type {
   CollectionStats,
   CollectionTypeSummary,
   DashboardCollection,
+  SidebarCollections,
 } from "@/types/collections";
 
-interface TypeRef {
-  id: string;
-  name: string;
-  icon: string | null;
-  color: string | null;
-}
+const COLLECTION_SELECT = {
+  id: true,
+  name: true,
+  description: true,
+  isFavorite: true,
+  items: {
+    select: {
+      item: { select: { type: { select: { id: true, name: true, icon: true, color: true } } } },
+    },
+  },
+} satisfies Prisma.CollectionSelect;
+
+type CollectionRow = Prisma.CollectionGetPayload<{ select: typeof COLLECTION_SELECT }>;
+type TypeRef = CollectionRow["items"][number]["item"]["type"];
 
 // Tally item types and sort most-used first (ties broken by name for a stable order).
 function summarizeTypes(types: TypeRef[]): CollectionTypeSummary[] {
@@ -25,6 +35,14 @@ function summarizeTypes(types: TypeRef[]): CollectionTypeSummary[] {
   );
 }
 
+function toDashboardCollection({ items, ...collection }: CollectionRow): DashboardCollection {
+  return {
+    ...collection,
+    itemCount: items.length,
+    types: summarizeTypes(items.map(({ item }) => item.type)),
+  };
+}
+
 export async function getRecentCollections(
   userId: string,
   limit: number
@@ -33,24 +51,33 @@ export async function getRecentCollections(
     where: { userId },
     orderBy: { updatedAt: "desc" },
     take: limit,
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      isFavorite: true,
-      items: {
-        select: {
-          item: { select: { type: { select: { id: true, name: true, icon: true, color: true } } } },
-        },
-      },
-    },
+    select: COLLECTION_SELECT,
   });
+  return collections.map(toDashboardCollection);
+}
 
-  return collections.map(({ items, ...collection }) => ({
-    ...collection,
-    itemCount: items.length,
-    types: summarizeTypes(items.map(({ item }) => item.type)),
-  }));
+// Sidebar lists every favorite, then the most recently updated non-favorites.
+export async function getSidebarCollections(
+  userId: string,
+  recentLimit: number
+): Promise<SidebarCollections> {
+  const [favorites, recents] = await Promise.all([
+    prisma.collection.findMany({
+      where: { userId, isFavorite: true },
+      orderBy: { updatedAt: "desc" },
+      select: COLLECTION_SELECT,
+    }),
+    prisma.collection.findMany({
+      where: { userId, isFavorite: false },
+      orderBy: { updatedAt: "desc" },
+      take: recentLimit,
+      select: COLLECTION_SELECT,
+    }),
+  ]);
+  return {
+    favorites: favorites.map(toDashboardCollection),
+    recents: recents.map(toDashboardCollection),
+  };
 }
 
 export async function getCollectionStats(userId: string): Promise<CollectionStats> {

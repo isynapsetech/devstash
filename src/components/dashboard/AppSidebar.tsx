@@ -1,5 +1,11 @@
+import { Suspense } from "react";
 import Link from "next/link";
-import { ChevronDown, Folder, Layers, Settings, Star } from "lucide-react";
+import { ChevronDown, Layers, Settings } from "lucide-react";
+import {
+  SidebarCollections,
+  SidebarItemTypes,
+  SidebarMenuListSkeleton,
+} from "@/components/dashboard/SidebarSections";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -11,16 +17,11 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import TypeIcon from "@/components/dashboard/TypeIcon";
-import { getCollectionsByRecent } from "@/lib/dashboard";
-import { collections, currentUser, itemTypes, type MockCollection } from "@/lib/mock-data";
-
-const RECENT_COLLECTIONS_LIMIT = 5;
+import { currentUser } from "@/lib/mock-data";
 
 function getInitials(name: string): string {
   return name
@@ -43,41 +44,7 @@ function SectionLabel({ label }: { label: string }) {
   );
 }
 
-function SubLabel({ label }: { label: string }) {
-  return (
-    <p className="px-2 pt-3 pb-1 text-[0.7rem] font-medium tracking-wider text-sidebar-foreground/50 uppercase group-data-[collapsible=icon]:hidden">
-      {label}
-    </p>
-  );
-}
-
-function CollectionLink({ collection }: { collection: MockCollection }) {
-  return (
-    <SidebarMenuItem>
-      <SidebarMenuButton
-        tooltip={collection.name}
-        render={<Link href={`/collections/${collection.id}`} />}
-      >
-        <Folder className="text-muted-foreground" />
-        <span>{collection.name}</span>
-      </SidebarMenuButton>
-      {collection.isFavorite ? (
-        <SidebarMenuBadge>
-          <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
-        </SidebarMenuBadge>
-      ) : (
-        <SidebarMenuBadge className="text-muted-foreground">{collection.itemCount}</SidebarMenuBadge>
-      )}
-    </SidebarMenuItem>
-  );
-}
-
 export default function AppSidebar() {
-  const favoriteCollections = collections.filter((collection) => collection.isFavorite);
-  const recentCollections = getCollectionsByRecent()
-    .filter((collection) => !collection.isFavorite)
-    .slice(0, RECENT_COLLECTIONS_LIMIT);
-
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -97,20 +64,9 @@ export default function AppSidebar() {
         <Collapsible defaultOpen render={<SidebarGroup />}>
           <SectionLabel label="Types" />
           <CollapsibleContent render={<SidebarGroupContent />}>
-            <SidebarMenu>
-              {itemTypes.map((type) => (
-                <SidebarMenuItem key={type.id}>
-                  <SidebarMenuButton
-                    tooltip={type.name}
-                    render={<Link href={`/items/${type.slug}`} />}
-                  >
-                    <TypeIcon icon={type.icon} color={type.color} />
-                    <span>{type.name}</span>
-                  </SidebarMenuButton>
-                  <SidebarMenuBadge className="text-muted-foreground">{type.itemCount}</SidebarMenuBadge>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <Suspense fallback={<SidebarMenuListSkeleton rows={7} />}>
+              <SidebarItemTypes />
+            </Suspense>
           </CollapsibleContent>
         </Collapsible>
 
@@ -119,22 +75,14 @@ export default function AppSidebar() {
         <Collapsible defaultOpen render={<SidebarGroup />}>
           <SectionLabel label="Collections" />
           <CollapsibleContent render={<SidebarGroupContent />}>
-            <SubLabel label="Favorites" />
-            <SidebarMenu>
-              {favoriteCollections.map((collection) => (
-                <CollectionLink key={collection.id} collection={collection} />
-              ))}
-            </SidebarMenu>
-            <SubLabel label="Recent" />
-            <SidebarMenu>
-              {recentCollections.map((collection) => (
-                <CollectionLink key={collection.id} collection={collection} />
-              ))}
-            </SidebarMenu>
+            <Suspense fallback={<SidebarMenuListSkeleton rows={5} />}>
+              <SidebarCollections />
+            </Suspense>
           </CollapsibleContent>
         </Collapsible>
       </SidebarContent>
 
+      {/* User area stays on mock data until auth is in place */}
       <SidebarFooter className="border-t">
         <SidebarMenu>
           <SidebarMenuItem>

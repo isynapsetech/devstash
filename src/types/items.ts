@@ -5,6 +5,11 @@ export interface ItemTypeSummary {
   color: string | null;
 }
 
+export interface SidebarItemType extends ItemTypeSummary {
+  isSystem: boolean;
+  itemCount: number; // the current user's items of this type
+}
+
 export interface DashboardItem {
   id: string;
   title: string;

@@ -1,6 +1,6 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Dashboard items — replace the mock item data in the dashboard main area (pinned items and recent items) with real data from the Neon database via Prisma.
+Stats & sidebar — show the dashboard stats from the database, and switch the sidebar's item types and collections from mock data to the Neon database.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
@@ -8,22 +8,21 @@ Completed
 
 # Goals
 <!-- Goals and requirements -->
-- Create `src/lib/db/items.ts` with the data fetching functions
-- Fetch items directly in the server component
-- Pinned items and recent items both come from the database
-- If there are no pinned items, the pinned section doesn't display at all
-- Item card icon and border color derived from the item type
-- Display the item's tags and everything else currently shown (title, description, pin/favorite markers, date)
-- Keep the current design (see the screenshot)
-- Update the stats display (items and favorite items stats, still on mock data)
+- Display stats from the database data, keeping the current design/layout
+- Sidebar: display the system item types with their icons, linking to `/items/[typename]`
+- Sidebar: show the actual collections from the database
+- Add a "View all collections" link under the collections list that goes to `/collections`
+- Keep the star icons for favorite collections; for recent collections, show a colored circle based on the most-used item type in that collection
+- Add the database functions to `src/lib/db/items.ts` (use `src/lib/db/collections.ts` for reference)
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/dashboard-items-spec.md
-- Reference: @context/screenshots/dashboard-ui-main.png (layout and design already exist)
-- Current item rows: `src/components/dashboard/ItemRow.tsx`, rendered by `src/app/dashboard/page.tsx` with data from `src/lib/dashboard.ts` / `src/lib/mock-data.ts`
-- Follow the pattern from dashboard collections: `getCurrentUserId()` (demo user until auth), async server components behind `<Suspense>` with skeletons
-- Seeded data has no pinned or favorite items and no tags, so the pinned section will be hidden and tags will be empty
+- Spec: @context/features/stats-sidebar-spec.md
+- Reference: @src/lib/db/collections.ts
+- Already done in earlier features: all four dashboard stats read from the database, and `src/lib/db/items.ts` already exists (pinned items, recent items, item stats) — extend it rather than recreate it
+- Current sidebar: `src/components/dashboard/AppSidebar.tsx`, using `src/lib/mock-data.ts` and `src/lib/dashboard.ts` (`getCollectionsByRecent`); `mock-data.ts` still also provides the sidebar user area
+- Seeded system type names are lowercase (`snippet`, `prompt`, …), so links become e.g. `/items/snippet`; the current mock links are plural (`/items/snippets`)
+- Follow the existing pattern: `getCurrentUserId()` (demo user until auth), async server components behind `<Suspense>` with skeletons
 - Schema changes (if any) go through `prisma migrate dev`, never `db push`
 
 # History
@@ -90,3 +89,12 @@ Completed
 - All four dashboard stats now come from the database
 - Removed the unused mock item/stats helpers from `src/lib/dashboard.ts` (now only feeds the sidebar)
 - Added `src/types/items.ts`; sidebar still uses mock data
+
+## 2026-10-27 — Stats & sidebar from the database
+- Added `getSidebarItemTypes()` to `src/lib/db/items.ts`: system types (fixed display order) plus custom types, with the user's item count per type
+- Added `getSidebarCollections()` to `src/lib/db/collections.ts`: all favorites plus 5 most recent non-favorites; shared select/mapper with the dashboard cards
+- Sidebar types link to `/items/[typename]` (e.g. `/items/snippet`), labels shown capitalized and plural
+- Favorite collections: folder icon + star; recent collections: dot colored by the most-used item type on the left, item count on the right
+- Added "View all collections" link to `/collections`; Favorites/Recent groups hide when empty
+- New `SidebarSections.tsx` with async server components behind `<Suspense>`; fixed-width skeleton rows because shadcn's `SidebarMenuSkeleton` uses `Math.random()`, which can't be prerendered
+- Dashboard stats were already on the database; sidebar user area still uses mock data, and `src/lib/dashboard.ts` is now unused (kept pending a decision)
