@@ -1,6 +1,6 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Dashboard collections — replace the mock collection data in the dashboard main area (the 6 recent collection cards) with real data from the Neon database via Prisma.
+Dashboard items — replace the mock item data in the dashboard main area (pinned items and recent items) with real data from the Neon database via Prisma.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
@@ -8,20 +8,22 @@ Completed
 
 # Goals
 <!-- Goals and requirements -->
-- Create `src/lib/db/collections.ts` with the data fetching functions
-- Fetch collections directly in the server component
-- Collection card border color derived from the most-used item type in that collection
-- Show small icons of all item types in that collection
+- Create `src/lib/db/items.ts` with the data fetching functions
+- Fetch items directly in the server component
+- Pinned items and recent items both come from the database
+- If there are no pinned items, the pinned section doesn't display at all
+- Item card icon and border color derived from the item type
+- Display the item's tags and everything else currently shown (title, description, pin/favorite markers, date)
 - Keep the current design (see the screenshot)
-- Update the collection stats display
-- Do **not** switch the items underneath (pinned / recent items) to the database yet — that comes later
+- Update the stats display (items and favorite items stats, still on mock data)
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/dashboard-collections-spec.md
+- Spec: @context/features/dashboard-items-spec.md
 - Reference: @context/screenshots/dashboard-ui-main.png (layout and design already exist)
-- Current collection cards: `src/components/dashboard/CollectionCard.tsx`, rendered by `src/app/dashboard/page.tsx` with data from `src/lib/dashboard.ts` / `src/lib/mock-data.ts`
-- Database is seeded with the demo user `demo@devstash.io` and 5 collections (`npm run db:seed`); there is no auth yet
+- Current item rows: `src/components/dashboard/ItemRow.tsx`, rendered by `src/app/dashboard/page.tsx` with data from `src/lib/dashboard.ts` / `src/lib/mock-data.ts`
+- Follow the pattern from dashboard collections: `getCurrentUserId()` (demo user until auth), async server components behind `<Suspense>` with skeletons
+- Seeded data has no pinned or favorite items and no tags, so the pinned section will be hidden and tags will be empty
 - Schema changes (if any) go through `prisma migrate dev`, never `db push`
 
 # History
@@ -80,3 +82,11 @@ Completed
 - `await connection()` before DB access, since the Neon driver's randomness isn't allowed during prerendering with `cacheComponents`
 - Collections and favorite collections stats come from the DB; item stats, pinned/recent items and the sidebar still use mock data
 - Added `src/types/collections.ts` for the dashboard collection shapes
+
+## 2026-10-27 — Dashboard items from the database
+- Added `src/lib/db/items.ts`: pinned items, recent items (by `updatedAt`, limit 10) with type and tags, and item stats (total, favorites)
+- New `PinnedItems` / `RecentItems` async server components behind `<Suspense>`; pinned section renders nothing (no fallback) when there are no pinned items
+- `ItemRow` uses database items; icon and border color come from the item type, tags shown as badges
+- All four dashboard stats now come from the database
+- Removed the unused mock item/stats helpers from `src/lib/dashboard.ts` (now only feeds the sidebar)
+- Added `src/types/items.ts`; sidebar still uses mock data

@@ -2,8 +2,7 @@ import { Pin, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import TypeIcon from "@/components/dashboard/TypeIcon";
-import { getItemType } from "@/lib/dashboard";
-import type { MockItem } from "@/lib/mock-data";
+import type { DashboardItem } from "@/types/items";
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -12,20 +11,17 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
 });
 
 interface ItemRowProps {
-  item: MockItem;
+  item: DashboardItem;
 }
 
 export default function ItemRow({ item }: ItemRowProps) {
-  const type = getItemType(item.typeId);
+  const color = item.type.color ?? undefined;
 
   return (
     // Type color comes from data (custom types later), so it can't be a static class
-    <Card
-      className="flex-row items-start gap-4 border-l-4 px-4"
-      style={{ borderLeftColor: type?.color }}
-    >
+    <Card className="flex-row items-start gap-4 border-l-4 px-4" style={{ borderLeftColor: color }}>
       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-        <TypeIcon icon={type?.icon ?? "File"} color={type?.color} className="size-5" />
+        <TypeIcon icon={item.type.icon ?? "File"} color={color} className="size-5" />
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex items-center gap-1.5">
@@ -33,7 +29,9 @@ export default function ItemRow({ item }: ItemRowProps) {
           {item.isPinned && <Pin className="size-3.5 shrink-0 text-muted-foreground" />}
           {item.isFavorite && <Star className="size-3.5 shrink-0 fill-yellow-400 text-yellow-400" />}
         </div>
-        <p className="line-clamp-1 text-muted-foreground">{item.description}</p>
+        {item.description && (
+          <p className="line-clamp-1 text-muted-foreground">{item.description}</p>
+        )}
         {item.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {item.tags.map((tag) => (
@@ -44,8 +42,8 @@ export default function ItemRow({ item }: ItemRowProps) {
           </div>
         )}
       </div>
-      <time dateTime={item.updatedAt} className="shrink-0 text-xs text-muted-foreground">
-        {DATE_FORMAT.format(new Date(item.updatedAt))}
+      <time dateTime={item.updatedAt.toISOString()} className="shrink-0 text-xs text-muted-foreground">
+        {DATE_FORMAT.format(item.updatedAt)}
       </time>
     </Card>
   );

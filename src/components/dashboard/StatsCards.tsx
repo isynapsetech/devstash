@@ -1,8 +1,8 @@
 import { FolderHeart, Folders, Layers, Star, type LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getItemStats } from "@/lib/dashboard";
 import { getCollectionStats } from "@/lib/db/collections";
+import { getItemStats } from "@/lib/db/items";
 import { getCurrentUserId } from "@/lib/db/user";
 
 interface Stat {
@@ -15,14 +15,15 @@ const GRID_CLASSES = "grid grid-cols-2 gap-4 lg:grid-cols-4";
 
 export default async function StatsCards() {
   const userId = await getCurrentUserId();
-  const collectionStats = await getCollectionStats(userId);
-  // Item stats still come from mock data until items are moved to the database.
-  const itemStats = getItemStats();
+  const [itemStats, collectionStats] = await Promise.all([
+    getItemStats(userId),
+    getCollectionStats(userId),
+  ]);
 
   const cards: Stat[] = [
-    { label: "Items", value: itemStats.totalItems, icon: Layers },
+    { label: "Items", value: itemStats.total, icon: Layers },
     { label: "Collections", value: collectionStats.total, icon: Folders },
-    { label: "Favorite items", value: itemStats.favoriteItems, icon: Star },
+    { label: "Favorite items", value: itemStats.favorites, icon: Star },
     { label: "Favorite collections", value: collectionStats.favorites, icon: FolderHeart },
   ];
 
