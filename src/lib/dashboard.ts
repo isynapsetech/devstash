@@ -40,12 +40,11 @@ export function getRecentItems(limit: number): MockItem[] {
   return [...items].sort(byUpdatedAtDesc).slice(0, limit);
 }
 
-export function getDashboardStats() {
+// Collection stats come from the database (src/lib/db/collections.ts).
+export function getItemStats() {
   return {
     // Per-type counts are the source of truth for totals; the mock item list is only a sample.
     totalItems: itemTypes.reduce((sum, type) => sum + type.itemCount, 0),
-    totalCollections: collections.length,
     favoriteItems: items.filter((item) => item.isFavorite).length,
-    favoriteCollections: collections.filter((collection) => collection.isFavorite).length,
   };
 }

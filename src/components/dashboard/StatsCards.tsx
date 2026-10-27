@@ -1,6 +1,9 @@
 import { FolderHeart, Folders, Layers, Star, type LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { getDashboardStats } from "@/lib/dashboard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getItemStats } from "@/lib/dashboard";
+import { getCollectionStats } from "@/lib/db/collections";
+import { getCurrentUserId } from "@/lib/db/user";
 
 interface Stat {
   label: string;
@@ -8,17 +11,23 @@ interface Stat {
   icon: LucideIcon;
 }
 
-export default function StatsCards() {
-  const stats = getDashboardStats();
+const GRID_CLASSES = "grid grid-cols-2 gap-4 lg:grid-cols-4";
+
+export default async function StatsCards() {
+  const userId = await getCurrentUserId();
+  const collectionStats = await getCollectionStats(userId);
+  // Item stats still come from mock data until items are moved to the database.
+  const itemStats = getItemStats();
+
   const cards: Stat[] = [
-    { label: "Items", value: stats.totalItems, icon: Layers },
-    { label: "Collections", value: stats.totalCollections, icon: Folders },
-    { label: "Favorite items", value: stats.favoriteItems, icon: Star },
-    { label: "Favorite collections", value: stats.favoriteCollections, icon: FolderHeart },
+    { label: "Items", value: itemStats.totalItems, icon: Layers },
+    { label: "Collections", value: collectionStats.total, icon: Folders },
+    { label: "Favorite items", value: itemStats.favoriteItems, icon: Star },
+    { label: "Favorite collections", value: collectionStats.favorites, icon: FolderHeart },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className={GRID_CLASSES}>
       {cards.map(({ label, value, icon: Icon }) => (
         <Card key={label}>
           <CardContent className="flex items-center justify-between gap-3">
@@ -29,6 +38,16 @@ export default function StatsCards() {
             <Icon className="size-5 shrink-0 text-muted-foreground" />
           </CardContent>
         </Card>
+      ))}
+    </div>
+  );
+}
+
+export function StatsCardsSkeleton() {
+  return (
+    <div className={GRID_CLASSES}>
+      {Array.from({ length: 4 }, (_, i) => (
+        <Skeleton key={i} className="h-19 rounded-xl" />
       ))}
     </div>
   );

@@ -1,6 +1,6 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Seed data — populate the database (`prisma/seed.ts`) with a demo user, system item types, and sample collections and items for development and demos.
+Dashboard collections — replace the mock collection data in the dashboard main area (the 6 recent collection cards) with real data from the Neon database via Prisma.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
@@ -8,32 +8,20 @@ Completed
 
 # Goals
 <!-- Goals and requirements -->
-- **Demo user:** `demo@devstash.io`, name "Demo User", password `12345678` hashed with bcryptjs (12 rounds), `isPro: false`, `emailVerified` set to the current date
-- **System item types** (`isSystem: true`, icons are Lucide component names):
-
-  | Name    | Icon       | Color   |
-  | ------- | ---------- | ------- |
-  | snippet | Code       | #3b82f6 |
-  | prompt  | Sparkles   | #8b5cf6 |
-  | command | Terminal   | #f97316 |
-  | note    | StickyNote | #fde047 |
-  | file    | File       | #6b7280 |
-  | image   | Image      | #ec4899 |
-  | link    | Link       | #10b981 |
-
-- **Collections and items:**
-  - **React Patterns** — _Reusable React patterns and hooks_ — 3 TypeScript snippets: custom hooks (useDebounce, useLocalStorage, etc.), component patterns (context providers, compound components), utility functions
-  - **AI Workflows** — _AI prompts and workflow automations_ — 3 prompts: code review, documentation generation, refactoring assistance
-  - **DevOps** — _Infrastructure and deployment resources_ — 1 snippet (Docker, CI/CD config), 1 command (deployment scripts), 2 links (real documentation URLs)
-  - **Terminal Commands** — _Useful shell commands for everyday development_ — 4 commands: git operations, Docker commands, process management, package manager utilities
-  - **Design Resources** — _UI/UX resources and references_ — 4 links (real URLs): CSS/Tailwind references, component libraries, design systems, icon libraries
+- Create `src/lib/db/collections.ts` with the data fetching functions
+- Fetch collections directly in the server component
+- Collection card border color derived from the most-used item type in that collection
+- Show small icons of all item types in that collection
+- Keep the current design (see the screenshot)
+- Update the collection stats display
+- Do **not** switch the items underneath (pinned / recent items) to the database yet — that comes later
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/seed-spec.md
-- Replaces the current seed in `prisma/seed.ts` (John Doe + mock dashboard data, capitalized type names) — run with `npm run db:seed`
-- Prisma 7 doesn't seed automatically after migrations; seed command is configured in `prisma.config.ts`
-- Needs `bcryptjs` installed
+- Spec: @context/features/dashboard-collections-spec.md
+- Reference: @context/screenshots/dashboard-ui-main.png (layout and design already exist)
+- Current collection cards: `src/components/dashboard/CollectionCard.tsx`, rendered by `src/app/dashboard/page.tsx` with data from `src/lib/dashboard.ts` / `src/lib/mock-data.ts`
+- Database is seeded with the demo user `demo@devstash.io` and 5 collections (`npm run db:seed`); there is no auth yet
 - Schema changes (if any) go through `prisma migrate dev`, never `db push`
 
 # History
@@ -83,3 +71,12 @@ Completed
 - Seed is re-runnable and removes the previous `john@example.com` seed user
 - `npm run db:test` now also verifies the seeded types, demo user (incl. password) and per-collection item types against the spec
 - Added `bcryptjs` dependency
+
+## 2026-10-27 — Dashboard collections from the database
+- Added `src/lib/db/collections.ts`: recent collections (by `updatedAt`, limit 6) with per-type item counts, and collection stats (total, favorites)
+- Added `src/lib/db/user.ts`: temporary `getCurrentUserId()` returning the seeded demo user until auth exists (React `cache()` dedupes per request)
+- Collection card border color comes from the most-used item type; card shows icons of all types in the collection
+- `RecentCollections` and `StatsCards` are async server components streamed behind `<Suspense>` with skeletons; `/dashboard` is now partially prerendered
+- `await connection()` before DB access, since the Neon driver's randomness isn't allowed during prerendering with `cacheComponents`
+- Collections and favorite collections stats come from the DB; item stats, pinned/recent items and the sidebar still use mock data
+- Added `src/types/collections.ts` for the dashboard collection shapes
