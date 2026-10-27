@@ -4,7 +4,7 @@ Prisma + Neon PostgreSQL setup — set up Prisma 7 ORM with a Neon serverless Po
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
-In Progress
+Completed
 
 # Goals
 <!-- Goals and requirements -->
@@ -54,3 +54,11 @@ In Progress
 - Extracted shared mock-data queries into `src/lib/dashboard.ts` and a `TypeIcon` component, reused by the sidebar
 - Added two mock items so the recent items list has 10 entries
 - Total items stat sums per-type counts to match the sidebar; favorite counts come from the sample item list
+
+## 2026-10-27 — Prisma 7 + Neon PostgreSQL setup
+- Installed Prisma 7.10 with `@prisma/adapter-neon`; client generated to `src/generated/prisma` (gitignored) via `postinstall`
+- `prisma.config.ts` loads `.env` with dotenv and uses `DIRECT_URL` for migrations; app client in `src/lib/prisma.ts` uses pooled `DATABASE_URL`
+- Initial schema from the project overview, incl. Auth.js models, indexes (incl. `[userId, isFavorite]`, `[userId, updatedAt]` on Item) and cascade deletes
+- Initial migration `20261027084116_init` applied to the Neon development branch (migrations only, never `db push`)
+- Seed script `prisma/seed.ts` (`npm run db:seed`): 7 system item types and a demo user with the mock collections, items and tags
+- Database smoke test `scripts/test-db.ts` (`npm run db:test`): connection, tables, counts, write/read and cascade delete
