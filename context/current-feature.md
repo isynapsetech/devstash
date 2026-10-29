@@ -1,6 +1,6 @@
 # Current Feature
 <!-- Feature Name and Short Description -->
-Stats & sidebar — show the dashboard stats from the database, and switch the sidebar's item types and collections from mock data to the Neon database.
+Collection query performance — stop loading every item in a collection just to count items and find the most-used type.
 
 # Status
 <!-- Not Started  or In Progress or Completed -->
@@ -8,22 +8,20 @@ Completed
 
 # Goals
 <!-- Goals and requirements -->
-- Display stats from the database data, keeping the current design/layout
-- Sidebar: display the system item types with their icons, linking to `/items/[typename]`
-- Sidebar: show the actual collections from the database
-- Add a "View all collections" link under the collections list that goes to `/collections`
-- Keep the star icons for favorite collections; for recent collections, show a colored circle based on the most-used item type in that collection
-- Add the database functions to `src/lib/db/items.ts` (use `src/lib/db/collections.ts` for reference)
+- `COLLECTION_SELECT` in `src/lib/db/collections.ts` no longer selects `items → item → type`; item count comes from `_count: { select: { items: true } }`
+- Per-type tallies come from one grouped query per call (collection ID × type ID → count) for the collections being shown, instead of fetching every item row
+- The grouped query only counts the user's own items (`Item.userId = userId`)
+- `getRecentCollections` and `getSidebarCollections` return the same `DashboardCollection` shape as now: `itemCount`, and `types` sorted most-used first, ties broken by name
+- No visible change: collection cards (border color, type icons) and the sidebar (dot color, item count) look the same
 
 # Notes
 <!-- Any extra notes -->
-- Spec: @context/features/stats-sidebar-spec.md
-- Reference: @src/lib/db/collections.ts
-- Already done in earlier features: all four dashboard stats read from the database, and `src/lib/db/items.ts` already exists (pinned items, recent items, item stats) — extend it rather than recreate it
-- Current sidebar: `src/components/dashboard/AppSidebar.tsx`, using `src/lib/mock-data.ts` and `src/lib/dashboard.ts` (`getCollectionsByRecent`); `mock-data.ts` still also provides the sidebar user area
-- Seeded system type names are lowercase (`snippet`, `prompt`, …), so links become e.g. `/items/snippet`; the current mock links are plural (`/items/snippets`)
-- Follow the existing pattern: `getCurrentUserId()` (demo user until auth), async server components behind `<Suspense>` with skeletons
-- Schema changes (if any) go through `prisma migrate dev`, never `db push`
+- Source: code-scanner review, 2026-10-29 (finding 3)
+- Today `COLLECTION_SELECT` loads every collection item row with its type, and it runs three times per dashboard load (recent cards, sidebar favorites, sidebar recents). The cost grows with the total number of items.
+- Prisma `groupBy` can't group by a field on a related table (`ItemCollection.collectionId` + `Item.typeId`), so the tally likely needs `$queryRaw` (or Prisma TypedSQL). Postgres returns `COUNT(*)` as a `bigint`, so convert it to a `number`.
+- Type details (name, icon, color) for the tally can come from one `itemType.findMany` over the type IDs that appear in it
+- Out of scope: limits on favorites and pinned items (finding 4), "recent" ordering (finding 5)
+- No schema change expected; if one is needed, use `prisma migrate dev`, never `db push`
 
 # History
 <!-- Keep this updated. Earliest to latest -->
@@ -98,3 +96,9 @@ Completed
 - Added "View all collections" link to `/collections`; Favorites/Recent groups hide when empty
 - New `SidebarSections.tsx` with async server components behind `<Suspense>`; fixed-width skeleton rows because shadcn's `SidebarMenuSkeleton` uses `Math.random()`, which can't be prerendered
 - Dashboard stats were already on the database; sidebar user area still uses mock data, and `src/lib/dashboard.ts` is now unused (kept pending a decision)
+
+## 2026-10-29 — Collection query performance
+- Collection queries in `src/lib/db/collections.ts` no longer load every item; `itemCount` comes from a filtered `_count` (user's own items only)
+- New `getTypeSummaries()`: one grouped `$queryRaw` (collection × type, joined with `ItemType`) for all collections shown; the sidebar's favorites and recents share one query
+- Tally only counts the user's own items; skipped when there are no collections; same `DashboardCollection` shape and sort order as before
+- Verified against the dev database: output identical to the previous implementation for the dashboard cards and both sidebar lists
